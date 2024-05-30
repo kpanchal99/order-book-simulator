@@ -1,38 +1,14 @@
+package backend;
+
 import java.util.Comparator;
 import java.util.Date;
 import java.util.concurrent.PriorityBlockingQueue;
-
-//
-//class MatchingEngineBook{
-//
-//    public static void matches(PriorityBlockingQueue<Order> ask, PriorityBlockingQueue<Order> bid) {
-//        try{
-//            Thread.sleep(10000);
-//            while(true){
-//                System.out.println("Waiting for order");
-//                // handle null case
-//                // handle same id buy sell
-//                if(bid.peek().price >= ask.peek().price){
-//                    // selling price is ask price
-//                    System.out.println("Order Executed");
-//                    System.out.println(bid.peek().orderID + " " + ask.peek().orderID + " ");
-//                    System.out.println(bid.peek().quantity + " " + ask.peek().quantity);
-//                    System.out.println(bid.peek().price + " " + ask.peek().price);
-//                    System.out.println(bid.peek().side + " " + ask.peek().side);
-//                }
-//            }
-//        }
-//        catch(Exception e){
-//
-//        }
-//    }
-//}
 
 class MatchingEngineBook {
     public static void matches(PriorityBlockingQueue<Order> ask, PriorityBlockingQueue<Order> bid) {
         try {
             while (true) {
-                // Check if both queues are not empty before proceeding
+                // Check if both queues are not empty / null
                 Order askOrder = ask.peek();
                 Order bidOrder = bid.peek();
 
@@ -51,11 +27,11 @@ class MatchingEngineBook {
                     System.out.println("Bid Price: " + bidOrder.price + " - Ask Price: " + askOrder.price);
                     System.out.println("Bid Side: " + bidOrder.side + " - Ask Side: " + askOrder.side);
                     System.out.println("---------------------------------------------------------------------------------------------");
-                    // Remove matched orders from the queue
+                    // Remove matched orders
                     ask.poll();
                     bid.poll();
                 } else {
-                    // If no match, sleep for a while before retrying
+                    // no match
                     Thread.sleep(1000);
                     System.out.println(ask.size() + " " + bid.size());
 //                    System.out.println("No matching orders available.");
@@ -74,7 +50,7 @@ public class Main {
         //buy descending
         PriorityBlockingQueue<Order> bid = new PriorityBlockingQueue<>(10, Comparator.comparingDouble(Order::getPrice).reversed());
 
-        // Sample orders
+        // Dummy Orders
         Order askOrder1 = new CreateOrder("A1", "AAPL", 150.0, 100, OrderType.LIMIT_ORDER, Side.ASK, new Date(), "OPEN", false);
         Order askOrder2 = new CreateOrder("A2", "AAPL", 150.50, 200, OrderType.LIMIT_ORDER, Side.ASK, new Date(), "OPEN", false);
         Order askOrder3 = new CreateOrder("A3", "AAPL", 160.0, 50, OrderType.LIMIT_ORDER, Side.ASK, new Date(), "OPEN", false);
@@ -83,7 +59,7 @@ public class Main {
         Order bidOrder2 = new CreateOrder("B2", "AAPL", 140.0, 100, OrderType.LIMIT_ORDER, Side.BID, new Date(), "OPEN", false);
         Order bidOrder3 = new CreateOrder("B3", "AAPL", 151.0, 200, OrderType.LIMIT_ORDER, Side.BID, new Date(), "OPEN", false);
 
-        // Add orders to queues
+        // Add orders
         ask.add(askOrder1);
         ask.add(askOrder2);
         ask.add(askOrder3);
@@ -106,33 +82,29 @@ public class Main {
         new Thread(() -> ChangeQueue.addRecords(ask, bid)).start();
     }
 }
-class ChangeQueue{
 
-    public static void addRecords(PriorityBlockingQueue<Order> ask, PriorityBlockingQueue<Order> bid){
+class ChangeQueue {
+
+    public static void addRecords(PriorityBlockingQueue<Order> ask, PriorityBlockingQueue<Order> bid) {
         try {
             Thread.sleep(5000);
 
-            // Creating new orders
             Order askOrder1 = new CreateOrder("A4", "AAPL", 150.0, 10, OrderType.LIMIT_ORDER, Side.ASK, new Date(), "OPEN", false);
             Order bidOrder1 = new CreateOrder("B4", "AAPL", 151.0, 10, OrderType.LIMIT_ORDER, Side.BID, new Date(), "OPEN", false);
 
-            // Adding new orders to the queues
             ask.add(askOrder1);
             bid.add(bidOrder1);
 
             Thread.sleep(5000);
 
-            // Creating more new orders
             Order askOrder2 = new CreateOrder("A5", "AAPL", 150.10, 10, OrderType.LIMIT_ORDER, Side.ASK, new Date(), "OPEN", false);
             Order bidOrder2 = new CreateOrder("B5", "AAPL", 151.0, 10, OrderType.LIMIT_ORDER, Side.BID, new Date(), "OPEN", false);
 
-            // Adding more new orders to the queues
             ask.add(askOrder2);
             bid.add(bidOrder2);
-            }
-            catch (Exception e) {
-                e.printStackTrace();
-            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 //        Order askOrder3 = new CreateOrder("A6", "AAPL", 150.20, 10, OrderType.LIMIT_ORDER, Side.ASK, new Date(), "OPEN", false);
 //        Order askOrder4 = new CreateOrder("A7", "AAPL", 150.30, 10, OrderType.LIMIT_ORDER, Side.ASK, new Date(), "OPEN", false);
 //        Order askOrder5 = new CreateOrder("A8", "AAPL", 150.40, 10, OrderType.LIMIT_ORDER, Side.ASK, new Date(), "OPEN", false);

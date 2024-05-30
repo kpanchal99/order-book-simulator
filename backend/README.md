@@ -11,3 +11,23 @@
 - Two Queue
   - Ask
   - Bid
+
+## Functional Requirement
+
+- Buy Sell Stock
+- Create Order
+- Best Price Matching
+- Instant status change update
+
+- Order Modification and Cancelation
+
+
+## Non Functional Requirement
+- Performance
+- Scalable
+- Security
+
+
+
+
+- Same user order should not match
